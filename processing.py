@@ -23,7 +23,7 @@ def process(image):
 
     warped_img = warping(image, mask_reshaped, og_verts)
 
-    chroma_img = chroma_key(warped_img)
+    chroma_img = detect_white_yellow(warped_img)
 
     gray_image = cv2.cvtColor(chroma_img, cv2.COLOR_RGB2GRAY)
 
@@ -31,58 +31,64 @@ def process(image):
 
     cv2.polylines(image, np.array([[p1, p2, p3, p4]], np.int32), True, (0, 255, 0), 8)
 
-    crop_l = gray_image[0:width // 2, 0:height]
-    cv2.imshow("crop", crop_l)
-    crop_r = gray_image[width // 2:width, 0:height]
+    crop_l = gray_image[0:height, width//8:width // 3]
+    crop_r = gray_image[0:height, round(width*0.6):round(width*0.9)]
+    cv2.imshow("crop", crop_r)
 
-    lines = cv2.HoughLines(crop_l, 1, np.pi / 180, 50)
+    # find the contours on the image
+    contours, hierarchy = cv2.findContours(crop_r, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # contours = imutils.grab_contours((contours, hierarchy))
 
-    line_coords = []
+    # sort the list of contours by the contour area
+    new = list(contours)
+    new.sort(key=cv2.contourArea)
 
-    if lines is not None:
-       # The below for loop runs till r and theta values
-       # are in the range of the 2d array
-       for r_theta in lines:
-          arr = np.array(r_theta[0], dtype=np.float64)
-          r, theta = arr
-          # Stores the value of cos(theta) in a
-          a = np.cos(theta)
+    # if there are at least 2 contours that have been detected
+    if len(new) > 1:
+        # get the 2 largest contours
+        c1 = new[-1]
+        c2 = new[-2]
 
-          # Stores the value of sin(theta) in b
-          b = np.sin(theta)
+        # fit polylines to each contour
+        outline1 = cv2.approxPolyDP(c1, 4, True)
+        cv2.drawContours(image, [outline1], -1, (0, 255, 255), 15)
 
-          # x0 stores the value rcos(theta)
-          x0 = a * r
+        outline2 = cv2.approxPolyDP(c2, 4, True)
+        cv2.drawContours(image, [outline2], -1, (0, 255, 255), 15)
 
-          # y0 stores the value rsin(theta)
-          y0 = b * r
+        c1x1 = 0
+        c1y1 = 0
+        c1x2 = 0
+        c1y2 = 0
 
-          # x1 stores the rounded off value of (rcos(theta)-1000sin(theta))
-          x1 = int(x0 + 1000 * (-b))
+        try:
+            M1 = cv2.moments(c1)
+            c1x1 = int(M1['m10']/M1['m00']) + round(width*0.6)
+            c1y1 = int(M1['m01'] / M1['m00'])
 
-          # y1 stores the rounded off value of (rsin(theta)+1000cos(theta))
-          y1 = int(y0 + 1000 * (a))
+            M2 = cv2.moments(c2)
+            c1x2 = int(M2['m10'] / M2['m00']) + round(width*0.6)
+            c1y2 = int(M2['m01'] / M2['m00'])
+        except Exception as e:
+            print(e)
 
-          # x2 stores the rounded off value of (rcos(theta)+1000sin(theta))
-          x2 = int(x0 - 1000 * (-b))
+        cv2.circle(warped_img, (c1x1, c1y1), 1, (0, 0, 255), 5)
+        cv2.circle(warped_img, (c1x2, c1y2), 1, (255, 0, 0), 5)
 
-          # y2 stores the rounded off value of (rsin(theta)-1000cos(theta))
-          y2 = int(y0 - 1000 * (a))
+        # # draw a midline by going through the polyline and averaging each x and y coordinate
+        # # append this averaged coordinate to a list and turn that list into a numpy array
+        # midline = []
+        #
+        # for pt1, pt2 in zip(outline1[:int(len(outline1) / 1.8)], outline2[:int(len(outline2) / 1.8)]):
+        #     mid_x = int((pt1[0][0] + pt2[0][0]) / 2)
+        #     mid_y = int((pt1[0][1] + pt2[0][1]) / 2)
+        #     midline.append([[mid_x, mid_y]])
 
-          try:
-             slope = round((y2 - y1) / (x2 - x1))
-          except:
-             slope = 999
+        # midline = np.array(midline, dtype=np.int32)
 
-          if not (-1 < slope < 1):
-             line_coords.append([(x1, y1), (x2, y2)])
-    # detect_r = detect_hough(crop_r)
-    # print(detect_r)
+        # # draw a polyline from the numpy array onto the frame
+        # cv2.polylines(image, [midline], False, (0, 255, 0), 15)
 
-    if len(line_coords) > 0:
-        # print("hi")
-        cv2.line(warped_img, line_coords[0][0], line_coords[0][1], (0, 0, 255), 8)
-        # cv2.line(warped_img, detect_r[0][0], detect_r[0][1], (255, 0, 0), 8)
 
     # # apply the mask onto the given frame23456u
     # cropped_image = masking(filtered_img, np.array([mask_vertices], np.int32))
