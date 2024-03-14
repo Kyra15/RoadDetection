@@ -20,18 +20,29 @@ def warping(img, vertices, og):
 
 
 def chroma_key(image):
-    up_bound = np.array([180, 170, 170])
-    lw_bound = np.array([65, 80, 75])
+    up_bound = np.array([210, 200, 180])
+    lw_bound = np.array([100, 110, 100])
 
     mask = cv2.inRange(image, lw_bound, up_bound)
     cv2.imshow("masking", mask)
     res = cv2.bitwise_and(image, image, mask=mask)
 
     f = image - res
-    cv2.imshow("mask", f)
+    cv2.imshow("chroma", f)
 
     return f
 
+
+def detect_white_yellow(image):
+    up_bound = np.array([255, 255, 255])
+    lw_bound = np.array([160, 160, 160])
+
+    mask = cv2.inRange(image, lw_bound, up_bound)
+    cv2.imshow("masking", mask)
+    res = cv2.bitwise_and(image, image, mask=mask)
+
+    cv2.imshow("yellow", res)
+    return res
 
 def detect_hough(image):
     lines = cv2.HoughLines(image, 1, np.pi / 180, 50)
