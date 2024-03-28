@@ -16,6 +16,8 @@ def process(image):
     mask_vertices = np.float32([p1, p2, p3, p4])
     mask_reshaped = mask_vertices.reshape((-1, 1, 2))
 
+    cv2.imshow('og', image)
+
     og_verts = np.float32([[0, height], [0, 0], [width, 0], [width, height]])
 
     warped_img = warping(image, mask_reshaped, og_verts)
@@ -35,37 +37,37 @@ def process(image):
     cv2.imshow("cropL", crop_l)
     cv2.imshow("cropR", crop_r)
 
-    contouring(crop_l, warped_img)
-    contouring(crop_r, warped_img, round(width * 0.6))
+    final_l, image_l = None, None
+    final_r, image_r = None, None
 
-    # lines = detect_hough(filtered_img)
-    #
-    # lineys = []
-    #
-    # if lines is not None:
-    #     for i in lines:
-    #         lin1 = cv2.line(warped_img, i[0], i[1], (0, 0, 0), 8)
+    try:
+        final_l, image_l = contouring(crop_l, warped_img)
+        final_r, image_r = contouring(crop_r, warped_img, round(width * 0.6))
+    except:
+        pass
 
-    # cv2.polylines(warped_img, np.array([[p1, p2, p3, p4]], np.int32), True, (0, 255, 0), 8)
+    lines_l = None
+    lines_r = None
 
-    # if len(lineys) > 1:
-    #     # draw a midline by going through the polyline and averaging each x and y coordinate
-    #     # append this averaged coordinate to a list and turn that list into a numpy array
-    #     midline = []
-    #
-    #     for pt1, pt2 in zip(lineys[0][:int(len(lineys[0]) / 1.8)], lines[1][:int(len(lines[1]) / 1.8)]):
-    #         mid_x = int((pt1[0][0] + pt2[0][0]) / 2)
-    #         mid_y = int((pt1[0][1] + pt2[0][1]) / 2)
-    #         midline.append([[mid_x, mid_y]])
-    #
-    #     midline = np.array(midline, dtype=np.int32)
-    #
-    #     # draw a polyline from the numpy array onto the frame
-    #     cv2.polylines(warped_img, [midline], False, (0, 255, 0), 15)
+    if final_l is not None:
+        cv2.imshow("final l", image_l)
+        lines_l = detect_hough(image_l)
+
+    if final_r is not None:
+        cv2.imshow("final r", final_r)
+        lines_r = detect_hough(image_r)
+
+    if lines_l is not None:
+        for i in lines_l:
+            cv2.line(warped_img, i[0], i[1], (0, 255, 255), 8)
+    if lines_r is not None:
+        for i in lines_r:
+            cv2.line(warped_img, i[0], i[1], (0, 255, 255), 8)
 
 
-    # # apply the mask onto the given frame23456u
-    # cropped_image = masking(filtered_img, np.array([mask_vertices], np.int32))
-    #
-    # cv2.imshow("masked", cropped_image)
+
+    # fake it. Save the line right before the turn and keep that line until a solid can be drawn again.
+    # get the two farthest lines and get midline
+
+
     return warped_img
