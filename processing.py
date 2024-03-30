@@ -8,19 +8,20 @@ def process(image):
     height = image.shape[0]  # 1080
     width = image.shape[1]  # 1920
 
-    p1 = [round(width / 4.2), height]
-    p2 = [round(width / 2.3), round(height / 1.4)]
-    p3 = [round(width / 1.7), round(height / 1.4)]
+    p1 = [round(width / 4.4), height]
+    p2 = [round(width / 2.3), round(height / 1.5)]
+    p3 = [round(width / 1.8), round(height / 1.5)]
     p4 = [round(width / 1.3), round(height)]
 
-    mask_vertices = np.float32([p1, p2, p3, p4])
+    mask_vertices = np.int32([p1, p2, p3, p4])
     mask_reshaped = mask_vertices.reshape((-1, 1, 2))
+    # cv2.polylines(image, [mask_reshaped], True, (0, 255, 255), 8)
 
     cv2.imshow('og', image)
 
     og_verts = np.float32([[0, height], [0, 0], [width, 0], [width, height]])
 
-    warped_img = warping(image, mask_reshaped, og_verts)
+    warped_img, pers_matrix = warping(image, np.float32(mask_reshaped), og_verts)
 
     yellow = detect_yellow(warped_img)
     white = detect_white(warped_img)
@@ -64,10 +65,4 @@ def process(image):
         for i in lines_r:
             cv2.line(warped_img, i[0], i[1], (0, 255, 255), 8)
 
-
-
-    # fake it. Save the line right before the turn and keep that line until a solid can be drawn again.
-    # get the two farthest lines and get midline
-
-
-    return warped_img
+    return image
