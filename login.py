@@ -37,7 +37,6 @@ def create_acc(username, password, firstname, lastname):
     existing_user = c.fetchone()
     if existing_user:
         messagebox.showerror("Already Exists", "This account already exists, choose a different username")
-        # print('This account already exists, choose a different username')
         return False
     elif username == '' or username.isspace():
         messagebox.showerror("Invalid User", "Choose a valid username")
@@ -61,17 +60,15 @@ def create_acc(username, password, firstname, lastname):
         ''', (username, enc_password, firstname, lastname))
         conn.commit()
         messagebox.showinfo("Success!", "You have created an account.")
-        # print('You have created an account')
-
         return True
 
 
-# logs the user into the Tank GUI if the username and password #entered match an acount in the database
+# logs the user into the Tank GUI if the username and password 
+# entered match an acount in the database
 def login(username, password):
     c.execute('''SELECT password FROM tank_database WHERE username = ?''', (username,))
     existing_user = c.fetchone()
     if existing_user is None:
-        # print('This account does not exist, please create one')
         messagebox.showerror("Does not Exist", "This account does not exist, please create one")
         return False, 'nope'
     else:
@@ -87,7 +84,6 @@ def login(username, password):
                 return True, name
 
             else:
-                # print('Incorrect password, please try again')
                 messagebox.showerror("Incorrect Password",
                                      "That is not the right password for this username, please try again")
                 return False, 'nope'
