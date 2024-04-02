@@ -24,8 +24,6 @@ def detect_hough(image):
     line_coords = []
 
     if lines is not None:
-        # The below for loop runs till r and theta values
-        # are in the range of the 2d array
         for r_theta in lines:
             # perform calculations onto the returned polar coordinates to convert them into cartesian ones
 
