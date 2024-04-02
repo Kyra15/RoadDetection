@@ -32,7 +32,7 @@ def process(image):
     # use canny edge filter on the grayscale image
     cannyed_image = cv2.Canny(gray, 200, 150, apertureSize=5)
 
-    # crop the image into 2 separate images, one of the left side of the road and one of the right
+    # crop the image into 2 seperate images, one of the left side of the road and one of the right
     crop_l = cannyed_image[0:height, round(width * 0.1):round(width * 0.3)]
     crop_r = cannyed_image[0:height, round(width * 0.7):round(width * 0.95)]
 

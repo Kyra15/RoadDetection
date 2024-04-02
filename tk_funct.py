@@ -38,8 +38,6 @@ def check_create_acc(user, pword, fname, lname, create_wind, root):
         Aeturn(create_wind, root)
 
 
-# posts the direction given to the button key on the give url
-# also calls the logging movement function and updates the log
 def postDataMove(direct, user):
     # url = "http://192.168.1.42:4200/moving"
     # data = {'button': direct}
@@ -48,9 +46,9 @@ def postDataMove(direct, user):
     logging_movement(user, direct)
     log_text = update_log()
     log_box.configure(state='normal')
-    log_box.delete('1.0', END)
-    log_box.insert(INSERT, log_text)
-    log_box.configure(state='disabled')
+    log_box.delete('1.0', END)  # Clear the current log display
+    log_box.insert(INSERT, log_text)  # Insert the updated log content
+    log_box.configure(state='disabled')  # Disable editing
 
 
 # creates a window where users can enter all of the parameters
@@ -164,13 +162,11 @@ def LoginWindow(root):
     login_wind.mainloop()
 
 
-# returns the user to the previous screen and calls the logging function to update the log
 def logging_out(tank_wind, root, username):
     Aeturn(tank_wind, root, username)
     logging_movement(username, 'logout')
 
 
-# logs the creation of an account with the given user name and the time
 def logging_create(username):
     try:
         tdytime = datetime.datetime.now()
@@ -186,7 +182,6 @@ def logging_create(username):
         print(f"An error occurred: {e}")
 
 
-# logs whenever the user logins in with the given time and date
 def all_log(username):
     try:
         tdytime = datetime.datetime.now()
@@ -202,7 +197,6 @@ def all_log(username):
         print(f"An error occurred: {e}")
 
 
-# logs the movement given the direction and user who moved the robot with a time and date
 def logging_movement(username, direction):
     tdytime = datetime.datetime.now()
     tdy = tdytime.strftime("%x")
@@ -219,7 +213,6 @@ def logging_movement(username, direction):
         f.write(writestr)
 
 
-# updates the visible log using the log.txt file
 def update_log():
     log_str = ""
     try:
@@ -232,7 +225,6 @@ def update_log():
     return log_str
 
 
-# updates the clean video stream on the gui by reading it from a video source already given
 def update_vid(canvas, tank_wind, source):
     ret, frame = source.read()
     if ret:
@@ -246,7 +238,6 @@ def update_vid(canvas, tank_wind, source):
     canvas.after(30, update_vid, canvas, tank_wind, source)
 
 
-# updates the overlay video on the gui by reading the video already given and applying the processing function on it
 def update_overlay(canvas1, tank_wind, source):
     ret, frame = source.read()
     if ret:
@@ -259,3 +250,5 @@ def update_overlay(canvas1, tank_wind, source):
         canvas1.photo2 = photo
 
     canvas1.after(30, update_overlay, canvas1, tank_wind, source)
+
+

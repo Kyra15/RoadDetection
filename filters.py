@@ -112,8 +112,7 @@ def average_lines(start1, end1, start2, end2):
     except ZeroDivisionError:
         slope2 = 999
 
-    # average the slopes and get the y intercept for the averaged line by getting the equation 
-    # of the line and plugging the midpoint coordinates back in
+    # average the slopes and get the intercepts
     avg_slope = (slope1 + slope2) / 2
     avg_int = avg_midpoint[1] - avg_slope * avg_midpoint[0]
 
@@ -136,7 +135,7 @@ def detect_arrow_left(frame):
     threshold = 0.8
     loc = np.where(res >= threshold)
     for pt in zip(*loc[::-1]):
-        cv2.putText(frame, "left", (50, 100), fontFace=1, fontScale=8.0, color=(0, 0, 0), thickness=8)
+        cv2.putText(frame, "left", (75, 100), fontFace=1, fontScale=8.0, color=(0, 255, 0), thickness=8)
     return frame
 
 
@@ -146,10 +145,10 @@ def detect_arrow_right(frame):
     frame_bw = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     template = cv2.imread('right_turn_temp.png', 0)
     res = cv2.matchTemplate(frame_bw, template, cv2.TM_CCOEFF_NORMED)
-    threshold = 0.8
+    threshold = 0.9
     loc = np.where(res >= threshold)
     for pt in zip(*loc[::-1]):
-        cv2.putText(frame, "right", (50, 100), fontFace=1, fontScale=8.0, color=(0, 0, 0), thickness=8)
+        cv2.putText(frame, "right", (75, 100), fontFace=1, fontScale=8.0, color=(0, 255, 0), thickness=8)
     return frame
 
 
