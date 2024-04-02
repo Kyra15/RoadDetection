@@ -112,7 +112,7 @@ def average_lines(start1, end1, start2, end2):
     except ZeroDivisionError:
         slope2 = 999
 
-    # average the slopes and intercepts
+    # average the slopes and get the y intercepts
     avg_slope = (slope1 + slope2) / 2
     avg_int = avg_midpoint[1] - avg_slope * avg_midpoint[0]
 
