@@ -24,9 +24,10 @@ def detect_hough(image):
     line_coords = []
 
     if lines is not None:
+        # The below for loop runs till r and theta values
+        # are in the range of the 2d array
         for r_theta in lines:
             # perform calculations onto the returned polar coordinates to convert them into cartesian ones
-
             arr = np.array(r_theta[0], dtype=np.float64)
             r, theta = arr
             a = np.cos(theta)
@@ -59,7 +60,7 @@ def check_hough(good_lines, og, extra_pix=0):
 
     # if the given lines is not empty,
     # check to make sure each of the lines are at least 20 pixels away from each other
-    # append all the good lines to a seperate list
+    # append all the good lines to a separate list
     if good_lines is not None:
         for i in good_lines:
             x1, y1 = i[0]
@@ -91,35 +92,35 @@ def check_hough(good_lines, og, extra_pix=0):
 
 
 # average 2 lines given their start and end coordinates
-def average_lines(line1_start, line1_end, line2_start, line2_end):
+def average_lines(start1, end1, start2, end2):
     # calculate midpoints of each line
-    line1_midpoint = ((line1_start[0] + line1_end[0]) / 2, (line1_start[1] + line1_end[1]) / 2)
-    line2_midpoint = ((line2_start[0] + line2_end[0]) / 2, (line2_start[1] + line2_end[1]) / 2)
+    mid1 = ((start1[0] + end1[0]) / 2, (start1[1] + end1[1]) / 2)
+    mid2 = ((start2[0] + end2[0]) / 2, (start2[1] + end2[1]) / 2)
 
     # get the average of the midpoints
-    avg_midpoint = ((line1_midpoint[0] + line2_midpoint[0]) / 2, (line1_midpoint[1] + line2_midpoint[1]) / 2)
+    avg_midpoint = ((mid1[0] + mid2[0]) / 2, (mid1[1] + mid2[1]) / 2)
 
     # calculate the slope of each line
     # if there is a zero division error, set the slope to some arbitrarily high number
     try:
-        slope1 = abs((line1_end[1] - line1_start[1]) / (line1_end[0] - line1_start[0]))
+        slope1 = abs((end1[1] - start1[1]) / (end1[0] - start1[0]))
     except ZeroDivisionError:
         slope1 = 999
 
     try:
-        slope2 = abs((line2_end[1] - line2_start[1]) / (line2_end[0] - line2_start[0]))
+        slope2 = abs((end2[1] - start2[1]) / (end2[0] - start2[0]))
     except ZeroDivisionError:
         slope2 = 999
 
     # average the slopes and intercepts
     avg_slope = (slope1 + slope2) / 2
-    avg_intercept = avg_midpoint[1] - avg_slope * avg_midpoint[0]
+    avg_int = avg_midpoint[1] - avg_slope * avg_midpoint[0]
 
     # get the endpoints of the averaged line
-    x1_avg = min(line1_start[0], line1_end[0], line2_start[0], line2_end[0])
-    x2_avg = max(line1_start[0], line1_end[0], line2_start[0], line2_end[0])
-    y1_avg = avg_slope * x1_avg + avg_intercept
-    y2_avg = avg_slope * x2_avg + avg_intercept
+    x1_avg = min(start1[0], end1[0], start2[0], end2[0])
+    x2_avg = max(start1[0], end1[0], start2[0], end2[0])
+    y1_avg = avg_slope * x1_avg + avg_int
+    y2_avg = avg_slope * x2_avg + avg_int
 
     # return the coordinates for the average line
     return (round(x1_avg), round(y1_avg)), (round(x2_avg), round(y2_avg))
