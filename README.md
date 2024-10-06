@@ -1,3 +1,8 @@
+Need all files, just run main.py
+
+
+
+
 Sources:
 - Perspective transform -  https://medium.com/analytics-vidhya/opencv-perspective-transformation-9edffefb2143
 - Lane detection -  https://medium.com/@mrhwick/simple-lane-detection-with-opencv-bfeb6ae54ec0
