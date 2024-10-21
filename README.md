@@ -1,5 +1,7 @@
 Need all files, just run main.py
 
+MAKE SURE TO USE THE LINK TO DOWNLOAD THE VIDEO!!
+
 
 
 
