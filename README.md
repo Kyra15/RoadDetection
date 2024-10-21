@@ -1,6 +1,8 @@
 Need all files, just run main.py
 
-MAKE SURE TO USE THE LINK TO DOWNLOAD THE VIDEO!!
+Make sure to use the link to download the video (link_to_vid.txt)!!
+
+Link to it working: https://drive.google.com/file/d/1zs8XoBHiQ6OWGGnQCY0_ce93uCS-DrIp/view?usp=sharing
 
 
 
