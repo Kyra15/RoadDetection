@@ -1,13 +1,10 @@
-Need all files, just run main.py
+# Road Detection
+Code written for AHS Programming with a Purpose
 
-Make sure to use the link to download the video (link_to_vid.txt)!!
+## Demo:
+[https://drive.google.com/file/d/1zs8XoBHiQ6OWGGnQCY0_ce93uCS-DrIp/view?usp=sharing](https://drive.google.com/file/d/1B2yKCbJYfqPrWy06NQ8XzspCULkX6IZ-/view?usp=sharing)
 
-Link to it working: https://drive.google.com/file/d/1zs8XoBHiQ6OWGGnQCY0_ce93uCS-DrIp/view?usp=sharing
-
-
-
-
-Sources:
+## Sources:
 - Perspective transform -  https://medium.com/analytics-vidhya/opencv-perspective-transformation-9edffefb2143
 - Lane detection -  https://medium.com/@mrhwick/simple-lane-detection-with-opencv-bfeb6ae54ec0
 - Template matching - https://docs.opencv.org/4.x/d4/dc6/tutorial_py_template_matching.html
