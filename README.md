@@ -1,6 +1,8 @@
 # Road Detection
 Code written for AHS Programming with a Purpose
 
+Using Python and OpenCV to detect lane lines on the road.
+
 ## Demo:
 [https://drive.google.com/file/d/1zs8XoBHiQ6OWGGnQCY0_ce93uCS-DrIp/view?usp=sharing](https://drive.google.com/file/d/1B2yKCbJYfqPrWy06NQ8XzspCULkX6IZ-/view?usp=sharing)
 
